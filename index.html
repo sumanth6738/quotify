@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Quotify </title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        
+    </head>
+    <body>
+        <h1 style="font-family:courier;"><center>Quotify </center> </h1>
+        <center><a class="ex2" href="randomquote.html">Random Quote (API)</a>&nbsp;
+            |&nbsp; <a class="ex2" href="randomLocal.html">Random Quote (Local)</a> 
+            &nbsp;|&nbsp; <a class="ex2" href='addQuote.html'>Add Quote</a> &nbsp;
+            | &nbsp; <a class="ex2" href="allquotes.html">List All Quotes (Local)</a></center> 
+        <br><br>
+    <form id = "form">
+       
+        <div id="quote" align="center" >
+          
+        </div>
+        <p style="float:right" >
+        <input type="button" id='btn1' value="Save to local" ></p><br><br><br>
+       <center><button type = 'submit' class="button button1">Get Another  Quote</button></center> 
+           <br>
+    </form>
+        <script>
+            const formHandle = document.getElementById('form')
+            const quoteHandle = document.getElementById('quote')
+            const btnHandle = document.getElementById('btn1')
+
+            let quotes
+            
+        //check if local srtorage setup is done
+        if(localStorage.getItem('quotes')){
+            // if key is present, then read the values and put it into a variable
+            quotes = JSON.parse(localStorage.getItem('quotes'))
+        } else {
+            //if key not there, set it up
+            localStorage.setItem('quotes',JSON.stringify([]))
+            quotes = JSON.parse(localStorage.getItem('quotes'))
+        }
+            
+            const xhr = new XMLHttpRequest()
+            
+                xhr.open('GET',`https://cors-anywhere.herokuapp.com/https://opinionated-quotes-api.gigalixirapp.com/v1/quotes`)
+                xhr.send()
+            xhr.onload = function(){
+        
+                const responseData = JSON.parse(xhr.responseText)
+                quoteHandle.innerHTML = ` ${responseData.quote}<br><br> ~ <b>${responseData.author}</b>`
+            }
+            
+            formHandle.addEventListener('submit',function(e){
+                e.preventDefault()
+                btnHandle.disabled = false
+                let quotearray={}
+                const xhr = new XMLHttpRequest()
+                xhr.open('GET',`http://quotes.stormconsultancy.co.uk/random.json`)
+                xhr.send()
+                
+                xhr.onload = function(){
+
+                const responseData = JSON.parse(xhr.responseText)
+                //quotearray = {quote:`${responseData.quote}`,author:`${responseData.author}`}
+                quoteHandle.innerHTML = `${responseData.quote} <br><br> ~ <b>${responseData.author}</b>`
+              
+            }
+        })
+    
+            btnHandle.addEventListener('click',function(){
+               // e.preventDefault()
+              const new_obj = {}
+              new_obj.title = quoteHandle.innerHTML
+              //console.log(new_obj.title)
+              quotes.push(new_obj)
+              localStorage.setItem('quotes', JSON.stringify(quotes))
+              btnHandle.disabled = true
+                
+            })     
+           
+        </script>
+    </body>
+</html>     

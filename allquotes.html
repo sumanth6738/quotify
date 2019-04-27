@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Quotify </title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        
+    </head>
+    <body>
+        <h1 style="font-family:courier;"><center>Quotify </center> </h1>
+        <center><a href="randomquote.html">Random Quote (API)</a>&nbsp;
+            |&nbsp; <a href="randomLocal.html">Random Quote (Local)</a> 
+            &nbsp;|&nbsp; <a href='addQuote.html'>Add Quote</a> &nbsp;
+            | &nbsp; <a href="allquotes.html">List All Quotes (Local)</a></center> 
+        <br><br>
+    <form id = "form">
+
+    </form>
+        <script>
+            const formHandle = document.getElementById('form')
+           
+            var quotes = JSON.parse(localStorage.getItem("quotes"))
+            function listAllQuotes(){
+                formHandle.innerHTML=''
+                var quotes = JSON.parse(localStorage.getItem("quotes"))               
+                for(let i = 0; i < quotes.length; i ++){
+                    let div = document.createElement('div')
+                    let button1 = document.createElement("button1")
+                    let update = document.createElement('BUTTON')
+                    let deletebtn = document.createElement('BUTTON')
+                    
+
+                    button1.innerHTML = `<pre> </pre>`;
+                    update.innerText = "Update"
+                    deletebtn.innerText = "Delete"
+                    
+
+                    div.innerHTML = `${quotes[i].title}<br><br>` 
+
+                    formHandle.appendChild(div)
+                    formHandle.appendChild(button1)
+
+                    update.setAttribute("value",i)
+                    deletebtn.setAttribute("value", i)
+                    div.appendChild(deletebtn)
+                    div.appendChild(update)
+                    div.setAttribute("id", i)
+                    deletebtn.setAttribute('class','dynamicDelete')                 
+                    deletebtn.setAttribute('onclick','deleteQuote(value)')
+                    update.setAttribute('class', 'dynamicEdit')         
+                    update.setAttribute('onclick','editQuote(value)')
+                
+                }                         
+            
+            }    
+
+          
+            window.onload = function(){
+                listAllQuotes()
+            }  
+            
+            function deleteQuote(val)
+            {       
+                var result = confirm('Are you sure, you want to delete it?')
+                if(result){             
+                let quotes=JSON.parse(localStorage.getItem('quotes'))
+                quotes.splice(val,1)
+                localStorage.setItem('quotes',JSON.stringify(quotes))
+                formHandle.innerHTML = ""
+                listAllQuotes()
+                }
+            }
+
+            function editQuote(val){
+                var quotes = JSON.parse(localStorage.getItem("quotes"))
+ 
+               let div = document.getElementById(val)
+               document.getElementById(val).innerHTML = ""
+            
+                let textareaHandle = document.createElement('textarea')
+                textareaHandle.setAttribute('rows',"5")  
+                textareaHandle.setAttribute('cols',"80")  
+                let updateHandle = document.createElement('BUTTON')
+                let cancelHandle = document.createElement('BUTTON')
+                updateHandle.innerText = "Update"
+                cancelHandle.innerText = "Cancel"
+                textareaHandle.value = quotes[Number(val)].title
+                div.appendChild(textareaHandle)
+                div.appendChild(updateHandle)
+                div.appendChild(cancelHandle)
+                updateHandle.setAttribute("value",Number(val))
+                updateHandle.setAttribute("onclick","updateQuote(value)")
+                
+                
+                cancelHandle.setAttribute("onclick", "cancelUpdate()")
+                textareaHandle.setAttribute("id",'quoteArea' )
+                             
+
+            }            
+
+            function updateQuote(val){ 
+          
+                let div = document.getElementById(val)
+                let textareaHandle = document.getElementById('quoteArea')
+                div.innerHTML = "";                
+                let qTag = document.createElement("q");          
+                qTag.innerHTML = textareaHandle.value;
+                div.appendChild(qTag);
+               
+                let editedNewQuote={
+                    title:textareaHandle.value,
+                    
+                };
+                let quotes=JSON.parse(localStorage.getItem('quotes'));
+                quotes[val]=editedNewQuote;
+                //debugger
+                localStorage.setItem('quotes',JSON.stringify(quotes));            
+                // listAllQuotes();
+                
+                // console.log(quotes[val]);
+                // console.log(editedNewQuote.title);
+            }
+        
+            function cancelUpdate(){
+                listAllQuotes();
+            }
+
+           
+            
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Quotify </title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        
+    </head>
+    <body>
+        <h1 style="font-family:courier;"><center>Quotify </center> </h1>
+        <center><a href="randomquote.html">Random Quote (API)</a>&nbsp;
+            |&nbsp; <a href="randomLocal.html">Random Quote (Local)</a> 
+            &nbsp;|&nbsp; <a href='addQuote.html'>Add Quote</a> &nbsp;
+            | &nbsp; <a href="allquotes.html">List All Quotes (Local)</a></center> 
+        <br><br>
+    <form id = "form"><br>
+        <div>
+<center>
+            <label>quotes :</label>
+            <textarea rows="8" cols="100" class = 'addquote' placeholder="Enter the quote and author name" ></textarea>
+        </center>
+       
+        <br>
+        <br>
+       <center><button onclick='btn()' class="button button1" >Save</button></center> 
+           <br>
+        </div>
+    </form>
+        <script>
+            const formHandle = document.getElementById('form')
+           const addquoteHandle = document.getElementById('addquote')
+            
+           // const btnHandle = document.getElementById('btn1')
+            let quotes
+            if(localStorage.getItem('quotes')){
+            // if key is present, then read the values and put it into a variable
+            quotes = JSON.parse(localStorage.getItem('quotes'))
+        } else {
+            //if key not there, set it up
+            localStorage.setItem('quotes',JSON.stringify([]))
+            quotes = JSON.parse(localStorage.getItem('quotes'))
+        }
+       function btn(){
+          
+           const new_obj = {}
+              new_obj.title = document.querySelector('.addquote').value;
+              console.log(new_obj.title)
+              quotes.push(new_obj)
+              localStorage.setItem('quotes', JSON.stringify(quotes))
+       }
+             
+    </script>
+
+</body>
+</html>
